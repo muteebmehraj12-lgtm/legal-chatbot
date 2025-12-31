@@ -19,7 +19,6 @@ def load_messages(user_id):
 def save_messages(user_id, messages):
     with open(get_chat_file(user_id), "w") as f:
         json.dump(messages, f)
-        
 def extract_text_from_pdf(file):
     text = ""
     with pdfplumber.open(file) as pdf:
@@ -31,10 +30,6 @@ def extract_text_from_pdf(file):
 def extract_text_from_image(file):
     image = Image.open(file)
     return pytesseract.image_to_string(image).strip()
-
-
-
-
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
 

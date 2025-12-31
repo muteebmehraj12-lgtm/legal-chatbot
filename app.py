@@ -88,12 +88,14 @@ for msg in st.session_state.messages:
 
 user_input = st.chat_input("Ask a legal question or refer to the uploaded document...")
 
-if uploaded_file is not None and user_input:
+if document_text and user_input:
     user_input = (
-        f"The user uploaded a document. "
-        f"Please explain it in simple legal terms.\n\n"
+        "The user has uploaded a legal document. "
+        "Below is the extracted text from the document:\n\n"
+        f"{document_text}\n\n"
         f"User question: {user_input}"
     )
+
 
 
 if user_input:

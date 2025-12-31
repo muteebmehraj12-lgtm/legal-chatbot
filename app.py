@@ -50,6 +50,8 @@ user_input = st.chat_input("Ask a legal question...")
 
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
+    save_messages(st.session_state.user_id, st.session_state.messages)
+
 
     with st.chat_message("assistant"):
         response = client.chat.completions.create(
@@ -65,3 +67,5 @@ if user_input:
         st.markdown(reply)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
+   
+

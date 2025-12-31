@@ -30,7 +30,6 @@ def extract_text_from_pdf(file):
 def extract_text_from_image(file):
     image = Image.open(file)
     return pytesseract.image_to_string(image).strip()
-
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
 
 st.markdown("""

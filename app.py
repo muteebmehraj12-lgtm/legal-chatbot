@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_audio_recorder import audio_recorder
 from openai import OpenAI
 import json
 import os
@@ -26,6 +27,13 @@ def extract_text_from_pdf(file):
         for page in pdf.pages:
             text += page.extract_text() or ""
     return text.strip()
+def speak_text(client, text):
+    audio = client.audio.speech.create(
+        model="gpt-4o-mini-tts",
+        voice="alloy",
+        input=text
+    )
+    return audio.read()
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
 
@@ -75,6 +83,11 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 user_input = st.chat_input("Ask a legal question or refer to the uploaded document...")
+audio_bytes = audio_recorder(text="🎤 Speak", pause_threshold=2.0)
+
+if audio_bytes:
+    user_input = "User spoke via microphone. Please respond to the spoken query."
+
 
 if document_text and user_input:
     user_input = (
@@ -125,7 +138,9 @@ if user_input:
         )
         reply = response.choices[0].message.content
         st.markdown(reply)
-
+        audio_out = speak_text(client, reply)
+        st.audio(audio_out, format="audio/mp3")
+        
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_messages(st.session_state.user_id, st.session_state.messages)
 

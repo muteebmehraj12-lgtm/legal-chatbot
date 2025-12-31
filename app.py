@@ -67,5 +67,7 @@ if user_input:
         st.markdown(reply)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
+    save_messages(st.session_state.user_id, st.session_state.messages)
+
    
 

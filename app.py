@@ -1,5 +1,22 @@
 import streamlit as st
 from openai import OpenAI
+import json
+import os
+def get_chat_file(user_id):
+    return f"chat_{user_id}.json"
+
+def load_messages(user_id):
+    filename = get_chat_file(user_id)
+    if os.path.exists(filename):
+        with open(filename, "r") as f:
+            return json.load(f)
+    return []
+
+def save_messages(user_id, messages):
+    with open(get_chat_file(user_id), "w") as f:
+        json.dump(messages, f)
+
+
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
 
@@ -19,9 +36,9 @@ import uuid
 if "user_id" not in st.session_state:
     st.session_state.user_id = str(uuid.uuid4())
 
-
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = load_messages(st.session_state.user_id)
+
 
 st.markdown("## ⚖️ Legal Assistant")
 

@@ -66,7 +66,14 @@ if user_input:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a legal information assistant. You must not provide definitive legal advice. Always remind users to consult a lawyer."
+                     "content": (  "You are a legal information assistant. "
+"Provide general legal information in a neutral, educational manner. "
+"Do not give definitive legal advice, predictions, or guarantees. "
+"If the user asks for advice specific to their situation, clearly state "
+"that you are not a lawyer and recommend consulting a qualified legal professional. "
+"If jurisdiction is unclear, ask the user to specify their country."
+                                )
+
                 }
             ] + st.session_state.messages
         )

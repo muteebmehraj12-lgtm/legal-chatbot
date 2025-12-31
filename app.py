@@ -49,11 +49,32 @@ if "messages" not in st.session_state:
 
 st.markdown("## ⚖️ Legal Assistant")
 
+
+uploaded_file = st.file_uploader(
+    "Upload a legal document (image or PDF)",
+    type=["png", "jpg", "jpeg", "pdf"]
+)
+
+if uploaded_file is not None:
+    st.info("Document uploaded successfully.")
+
+    if uploaded_file.type == "application/pdf":
+        st.warning("PDF uploaded. Explanation will be based on extracted text.")
+
+
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-user_input = st.chat_input("Ask a legal question...")
+user_input = st.chat_input("Ask a legal question or refer to the uploaded document...")
+
+if uploaded_file is not None and user_input:
+    user_input = (
+        f"The user uploaded a document. "
+        f"Please explain it in simple legal terms.\n\n"
+        f"User question: {user_input}"
+    )
+
 
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})

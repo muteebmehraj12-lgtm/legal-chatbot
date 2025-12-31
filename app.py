@@ -3,6 +3,7 @@ from openai import OpenAI
 import json
 import os
 import pdfplumber
+import base64
 from PIL import Image
 
 def get_chat_file(user_id):
@@ -67,6 +68,7 @@ uploaded_file = st.file_uploader(
 )
 
 document_text = ""
+image_bytes = None
 
 if uploaded_file is not None:
     st.info("Document uploaded successfully.")
@@ -74,7 +76,9 @@ if uploaded_file is not None:
     if uploaded_file.type == "application/pdf":
         document_text = extract_text_from_pdf(uploaded_file)
     else:
-        document_text = extract_text_from_image(uploaded_file)
+        image_bytes = uploaded_file.getvalue()
+
+
 
 
 for msg in st.session_state.messages:
@@ -97,26 +101,44 @@ if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
     save_messages(st.session_state.user_id, st.session_state.messages)
 
-
-    with st.chat_message("assistant"):
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                     "content": (  "You are a legal information assistant. "
-"Provide general legal information in a neutral, educational manner. "
-"Do not give definitive legal advice, predictions, or guarantees. "
-"If the user asks for advice specific to their situation, clearly state "
-"that you are not a lawyer and recommend consulting a qualified legal professional. "
-"If jurisdiction is unclear, ask the user to specify their country."
-                                )
-
-                }
-            ] + st.session_state.messages
+messages = [
+    {
+        "role": "system",
+        "content": (
+            "You are a legal information assistant. "
+            "Provide general legal information in a neutral, educational manner. "
+            "Do not give definitive legal advice, predictions, or guarantees. "
+            "If the user asks for advice specific to their situation, clearly state "
+            "that you are not a lawyer and recommend consulting a qualified legal professional. "
+            "If jurisdiction is unclear, ask the user to specify their country."
         )
-        reply = response.choices[0].message.content
-        st.markdown(reply)
+    }
+]
+
+if image_bytes:
+    messages.append({
+        "role": "user",
+        "content": [
+            {"type": "text", "text": user_input},
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/png;base64,{base64.b64encode(image_bytes).decode()}"
+                }
+            }
+        ]
+    })
+else:
+    messages.extend(st.session_state.messages)
+
+with st.chat_message("assistant"):
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages
+    )
+    reply = response.choices[0].message.content
+    st.markdown(reply)
+
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_messages(st.session_state.user_id, st.session_state.messages)

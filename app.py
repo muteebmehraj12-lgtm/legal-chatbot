@@ -14,6 +14,11 @@ st.markdown("### Login")
 st.info("Google Sign-In will be enabled shortly.")
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+import uuid
+
+if "user_id" not in st.session_state:
+    st.session_state.user_id = str(uuid.uuid4())
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = []

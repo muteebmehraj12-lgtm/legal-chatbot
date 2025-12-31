@@ -33,8 +33,15 @@ st.info("Google Sign-In will be enabled shortly.")
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 import uuid
 
-if "user_id" not in st.session_state:
-    st.session_state.user_id = str(uuid.uuid4())
+query_params = st.experimental_get_query_params()
+
+if "user_id" in query_params:
+    st.session_state.user_id = query_params["user_id"][0]
+else:
+    new_id = str(uuid.uuid4())
+    st.session_state.user_id = new_id
+    st.experimental_set_query_params(user_id=new_id)
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = load_messages(st.session_state.user_id)

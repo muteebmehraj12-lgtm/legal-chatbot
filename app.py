@@ -71,11 +71,15 @@ uploaded_file = st.file_uploader(
     type=["png", "jpg", "jpeg", "pdf"]
 )
 
+document_text = ""
+
 if uploaded_file is not None:
     st.info("Document uploaded successfully.")
 
     if uploaded_file.type == "application/pdf":
-        st.warning("PDF uploaded. Explanation will be based on extracted text.")
+        document_text = extract_text_from_pdf(uploaded_file)
+    else:
+        document_text = extract_text_from_image(uploaded_file)
 
 
 for msg in st.session_state.messages:

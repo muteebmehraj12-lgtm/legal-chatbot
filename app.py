@@ -2,6 +2,10 @@ import streamlit as st
 from openai import OpenAI
 import json
 import os
+import pdfplumber
+import pytesseract
+from PIL import Image
+
 def get_chat_file(user_id):
     return f"chat_{user_id}.json"
 

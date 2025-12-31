@@ -3,7 +3,6 @@ from openai import OpenAI
 import json
 import os
 import pdfplumber
-import pytesseract
 from PIL import Image
 
 def get_chat_file(user_id):
@@ -28,8 +27,8 @@ def extract_text_from_pdf(file):
     return text.strip()
 
 def extract_text_from_image(file):
-    image = Image.open(file)
-    return pytesseract.image_to_string(image).strip()
+    return "Image text extraction is not available in this demo. Please upload a PDF document instead."
+
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
 
 st.markdown("""

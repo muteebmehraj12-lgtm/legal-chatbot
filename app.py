@@ -95,6 +95,10 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 user_input = st.chat_input("Ask a legal question or refer to the uploaded document...")
+audio_bytes = st.audio_input("🎤 Speak (experimental)")
+
+if audio_bytes is not None:
+    user_input = "User spoke via microphone. Please respond to the spoken query."
 
 if audio_file:
     user_input = transcribe_audio(client, audio_file)

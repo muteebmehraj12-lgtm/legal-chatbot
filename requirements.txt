@@ -1,6 +1,7 @@
 streamlit
 cryptography
 
+streamlit-oauth
 
 openai
 pdfplumber

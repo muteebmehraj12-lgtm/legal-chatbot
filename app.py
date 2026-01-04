@@ -180,7 +180,7 @@ if user_input:
         }
     ]
 
- for msg in st.session_state.messages:
+   for msg in st.session_state.messages:
     messages.append({
         "role": msg["role"],
         "content": decrypt_text(msg["content"])

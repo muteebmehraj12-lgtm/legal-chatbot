@@ -213,6 +213,7 @@ messages = [
     }
 ]
 
+
 if image_bytes:
     messages.append({
         "role": "user",
@@ -226,6 +227,7 @@ if image_bytes:
             }
         ]
     })
+    
 else:
     for msg in st.session_state.messages:
         messages.append({
@@ -243,9 +245,11 @@ else:
         st.markdown(reply)
         audio_out = speak_text(client, reply)
         st.audio(audio_out, format="audio/mp3")
+        
 
     st.session_state.messages.append({
         "role": "assistant",
         "content": encrypt_text(reply)
     })
+    
     save_messages(st.session_state.user_id, st.session_state.messages)

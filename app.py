@@ -77,6 +77,14 @@ def decrypt_text(token):
 
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
+
+oauth2 = OAuth2Component(
+    client_id=st.secrets["GOOGLE_CLIENT_ID"],
+    client_secret=st.secrets["GOOGLE_CLIENT_SECRET"],
+    authorize_endpoint="https://accounts.google.com/o/oauth2/v2/auth",
+    token_endpoint="https://oauth2.googleapis.com/token",
+)
+
 if "oauth_started" not in st.session_state:
     st.session_state.oauth_started = False
 

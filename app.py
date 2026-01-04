@@ -180,14 +180,15 @@ if user_input:
         }
     ]
 
-   for msg in st.session_state.messages:
+
+for msg in st.session_state.messages:
     messages.append({
         "role": msg["role"],
         "content": decrypt_text(msg["content"])
     })
 
 
-    with st.chat_message("assistant"):
+with st.chat_message("assistant"):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=messages

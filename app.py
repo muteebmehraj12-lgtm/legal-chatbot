@@ -91,15 +91,14 @@ result = oauth2.authorize_button(
     key="google_login",
 )
 
-
 if result:
-    id_token = result["id_token"]
-    st.session_state.user_email = id_token["email"]
-    st.session_state.user_id = id_token["email"]
-    st.success(f"Logged in as {st.session_state.user_email}")
+    st.session_state.user_logged_in = True
+    st.session_state.user_id = "google_user"
+    st.success("Logged in with Google")
 
-if "user_email" not in st.session_state:
+if "user_logged_in" not in st.session_state:
     st.stop()
+
 
 
 

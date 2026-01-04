@@ -200,15 +200,13 @@ if user_input:
     
   
 
-
 messages = [
     {
         "role": "system",
         "content": (
             "You are a legal information assistant. "
             "You can analyze text, PDFs, and images. "
-            "Provide general legal information only. "
-            "Do not give legal advice."
+            "Provide general legal information only."
         )
     }
 ]
@@ -217,7 +215,7 @@ if image_bytes:
     messages.append({
         "role": "user",
         "content": [
-            {"type": "text", "text": user_input},
+            {"type": "text", "text": user_input or "Describe the image"},
             {
                 "type": "image_url",
                 "image_url": {
@@ -227,11 +225,13 @@ if image_bytes:
         ]
     })
 else:
+    
     for msg in st.session_state.messages:
         messages.append({
             "role": msg["role"],
             "content": decrypt_text(msg["content"])
         })
+
 
 
 with st.chat_message("assistant"):

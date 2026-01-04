@@ -129,7 +129,6 @@ st.markdown(
     "🧩 **Features:** Context-aware chat · PDF analysis · Image understanding · Voice input · Spoken responses"
 )
 
-st.info("Google Sign-In will be enabled shortly.")
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
@@ -197,6 +196,9 @@ if user_input:
         "content": encrypt_text(user_input)
     })
     save_messages(st.session_state.user_id, st.session_state.messages)
+    
+  # st.write("Encrypted stored value:", st.session_state.messages[-1]["content"])
+
     
   
 

@@ -201,25 +201,38 @@ if user_input:
   
 
 
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                "You are a legal information assistant. "
-                "Provide general legal information in a neutral, educational manner. "
-                "Do not give definitive legal advice, predictions, or guarantees. "
-                "If the user asks for advice specific to their situation, clearly state "
-                "that you are not a lawyer and recommend consulting a qualified legal professional. "
-                "If jurisdiction is unclear, ask the user to specify their country."
-            )
-        }
-    ]
+ messages = [
+    {
+        "role": "system",
+        "content": (
+            "You are a legal information assistant. "
+            "You can analyze text, PDFs, and images. "
+            "Provide general legal information only. "
+            "Do not give legal advice."
+        )
+    }
+]
 
+if image_bytes:
+    messages.append({
+        "role": "user",
+        "content": [
+            {"type": "text", "text": user_input},
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:image/png;base64,{base64.b64encode(image_bytes).decode()}"
+                }
+            }
+        ]
+    })
+else:
     for msg in st.session_state.messages:
         messages.append({
             "role": msg["role"],
             "content": decrypt_text(msg["content"])
         })
+
 
     with st.chat_message("assistant"):
         response = client.chat.completions.create(

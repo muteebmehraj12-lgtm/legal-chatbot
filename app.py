@@ -77,24 +77,25 @@ def decrypt_text(token):
 
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
-oauth2 = OAuth2Component(
-    client_id=st.secrets["GOOGLE_CLIENT_ID"],
-    client_secret=st.secrets["GOOGLE_CLIENT_SECRET"],
-    authorize_endpoint="https://accounts.google.com/o/oauth2/v2/auth",
-    token_endpoint="https://oauth2.googleapis.com/token",
-)
+if "oauth_started" not in st.session_state:
+    st.session_state.oauth_started = False
 
-result = oauth2.authorize_button(
-    name="Continue with Google",
-    redirect_uri="https://legal-chatbot-dnygt4ew6ilnfeclzqkhf8.streamlit.app/",
-    scope="openid email profile",
-    key="google_login",
-)
+if not st.session_state.oauth_started:
+    result = oauth2.authorize_button(
+        name="Continue with Google",
+        redirect_uri="https://legal-chatbot-dnygt4ew6ilnfeclzqkhf8.streamlit.app/",
+        scope="openid email profile",
+        key="google_login",
+    )
+else:
+    result = None
 
 if result:
+    st.session_state.oauth_started = True
     st.session_state.user_logged_in = True
     st.session_state.user_id = "google_user"
     st.success("Logged in with Google")
+
 
 if "user_logged_in" not in st.session_state:
     st.stop()

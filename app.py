@@ -5,6 +5,8 @@ import os
 import pdfplumber
 import base64
 import uuid
+import io
+
 
 def get_chat_file(user_id):
     return f"chat_{user_id}.json"
@@ -27,12 +29,16 @@ def extract_text_from_pdf(file):
             text += page.extract_text() or ""
     return text.strip()
 
-def transcribe_audio(client, audio_file):
+def transcribe_audio_bytes(client, audio_bytes):
+    audio_file = io.BytesIO(audio_bytes)
+    audio_file.name = "mic_audio.wav"  # REQUIRED
+
     transcript = client.audio.transcriptions.create(
         file=audio_file,
         model="gpt-4o-mini-transcribe"
     )
     return transcript.text
+
 
 def speak_text(client, text):
     audio = client.audio.speech.create(

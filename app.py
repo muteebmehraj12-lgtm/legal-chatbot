@@ -43,6 +43,13 @@ def speak_text(client, text):
     return audio.read()
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
+def transcribe_audio_bytes(client, audio_bytes):
+    transcript = client.audio.transcriptions.create(
+        file=audio_bytes,
+        model="gpt-4o-mini-transcribe"
+    )
+    return transcript.text
+
 
 st.markdown("""
 ⚠️ **Disclaimer**  
@@ -98,7 +105,9 @@ user_input = st.chat_input("Ask a legal question or refer to the uploaded docume
 audio_bytes = st.audio_input("🎤 Speak (experimental)")
 
 if audio_bytes is not None:
-    user_input = "User spoke via microphone. Please respond to the spoken query."
+    user_input = transcribe_audio_bytes(client, audio_bytes)
+    st.info(f"Transcribed voice input: {user_input}")
+
 
 if audio_file:
     user_input = transcribe_audio(client, audio_file)

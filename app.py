@@ -8,8 +8,8 @@ import uuid
 import io
 import base64
 import uuid
-import jwt
-import streamlit as st
+
+
 from streamlit_oauth import OAuth2Component
 
 
@@ -97,38 +97,6 @@ if result:
     
 if "user_email" not in st.session_state:
     st.stop()
-
-
-st.markdown("## 🔐 Sign in with Google")
-
-google_token = st.text_input(
-    "Paste Google ID token",
-    help="Sign in using Google OAuth token"
-)
-
-if not google_token:
-    st.stop()
-
-user_info = jwt.decode(
-    google_token,
-    options={"verify_signature": False}
-)
-
-st.success(f"Logged in as {user_info['email']}")
-st.session_state.user_id = user_info["email"]
-
-try:
-    user_info = jwt.decode(
-        google_token,
-        options={"verify_signature": False}
-    )
-except Exception:
-    st.error("Invalid Google token")
-    st.stop()
-
-st.success(f"Logged in as {user_info['email']}")
-
-st.session_state.user_id = user_info["email"]
 
 
 def transcribe_audio_bytes(client, audio_bytes):

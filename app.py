@@ -31,7 +31,7 @@ def extract_text_from_pdf(file):
 
 def transcribe_audio_bytes(client, audio_bytes):
     audio_file = io.BytesIO(audio_bytes)
-    audio_file.name = "mic_audio.wav"  # REQUIRED
+    audio_file.name = "mic_audio.wav" 
 
     transcript = client.audio.transcriptions.create(
         file=audio_file,
@@ -56,15 +56,17 @@ def transcribe_audio_bytes(client, audio_bytes):
     )
     return transcript.text
 
-
 st.markdown("""
 ⚠️ **Disclaimer**  
-This chatbot provides general legal information only.  
-It is not a lawyer and does not provide legal advice.  
-Always consult a qualified legal professional.
+This chatbot provides **general legal information only**.  
+It does **not** constitute legal advice and is **not a substitute** for a qualified lawyer.  
+For advice specific to your situation, please consult a licensed legal professional.
 """)
 
-st.markdown("### Login")
+st.markdown(
+    "🧩 **Features:** Context-aware chat · PDF analysis · Image understanding · Voice input · Spoken responses"
+)
+
 st.info("Google Sign-In will be enabled shortly.")
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -89,8 +91,11 @@ uploaded_file = st.file_uploader(
 )
 
 audio_file = st.file_uploader(
-    "Upload an audio question (WAV or MP3)",
+    "Upload a voice question (WAV or MP3)",
     type=["wav", "mp3"]
+)
+st.caption(
+    "You can ask questions by typing, uploading a voice recording, or speaking via the microphone if supported by your browser."
 )
 
 document_text = ""

@@ -8,6 +8,8 @@ import uuid
 import io
 import base64
 import uuid
+import jwt
+
 from cryptography.fernet import Fernet
 
 
@@ -72,6 +74,39 @@ def decrypt_text(token):
 
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
+
+st.markdown("## 🔐 Sign in with Google")
+
+google_token = st.text_input(
+    "Paste Google ID token",
+    help="Sign in using Google OAuth token"
+)
+
+if not google_token:
+    st.stop()
+
+user_info = jwt.decode(
+    google_token,
+    options={"verify_signature": False}
+)
+
+st.success(f"Logged in as {user_info['email']}")
+st.session_state.user_id = user_info["email"]
+
+try:
+    user_info = jwt.decode(
+        google_token,
+        options={"verify_signature": False}
+    )
+except Exception:
+    st.error("Invalid Google token")
+    st.stop()
+
+st.success(f"Logged in as {user_info['email']}")
+
+st.session_state.user_id = user_info["email"]
+
+
 def transcribe_audio_bytes(client, audio_bytes):
     transcript = client.audio.transcriptions.create(
         file=audio_bytes,
@@ -94,14 +129,6 @@ st.info("Google Sign-In will be enabled shortly.")
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-query_params = st.experimental_get_query_params()
-
-if "user_id" in query_params:
-    st.session_state.user_id = query_params["user_id"][0]
-else:
-    new_id = str(uuid.uuid4())
-    st.session_state.user_id = new_id
-    st.experimental_set_query_params(user_id=new_id)
 
 if "messages" not in st.session_state:
     st.session_state.messages = load_messages(st.session_state.user_id)

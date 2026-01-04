@@ -154,14 +154,12 @@ if document_text and user_input:
     )
 
 if user_input:
-   st.session_state.messages.append({
-    "role": "user",
-    "content": encrypt_text(user_input)
-})
-
+ 
+    st.session_state.messages.append({
+        "role": "user",
+        "content": encrypt_text(user_input)
+    })
     save_messages(st.session_state.user_id, st.session_state.messages)
-st.write("Encrypted message preview:", encrypt_text(user_input))
-
 
     messages = [
         {
@@ -177,38 +175,21 @@ st.write("Encrypted message preview:", encrypt_text(user_input))
         }
     ]
 
-    if image_bytes:
-        messages.append({
-            "role": "user",
-            "content": [
-                {"type": "text", "text": user_input},
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": f"data:image/png;base64,{base64.b64encode(image_bytes).decode()}"
-                    }
-                }
-            ]
-        })
-    else:
-        messages.extend(st.session_state.messages)
+    messages.extend(st.session_state.messages)
 
-   with st.chat_message("assistant"):
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=messages
-    )
-    reply = response.choices[0].message.content
-    st.markdown(reply)
-    audio_out = speak_text(client, reply)
-    st.audio(audio_out, format="audio/mp3")
-
-st.session_state.messages.append({
-    "role": "assistant",
-    "content": encrypt_text(reply)
-})
-save_messages(st.session_state.user_id, st.session_state.messages)
+    with st.chat_message("assistant"):
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=messages
+        )
+        reply = response.choices[0].message.content
+        st.markdown(reply)
+        audio_out = speak_text(client, reply)
+        st.audio(audio_out, format="audio/mp3")
 
 
-
-
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": encrypt_text(reply)
+    })
+    save_messages(st.session_state.user_id, st.session_state.messages)

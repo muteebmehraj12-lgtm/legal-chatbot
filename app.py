@@ -86,7 +86,7 @@ oauth2 = OAuth2Component(
 
 result = oauth2.authorize_button(
     name="Continue with Google",
-    redirect_uri="https://legal-chatbot-dnygt4ew6ilnfeclzqkhf8.streamlit.app",
+    redirect_uri="https://legal-chatbot-dnygt4ew6ilnfeclzqkhf8.streamlit.app/",
     scope="openid email profile",
     key="google_login",
 )

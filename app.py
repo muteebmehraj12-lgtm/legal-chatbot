@@ -160,6 +160,8 @@ if user_input:
 })
 
     save_messages(st.session_state.user_id, st.session_state.messages)
+st.write("Encrypted message preview:", encrypt_text(user_input))
+
 
     messages = [
         {

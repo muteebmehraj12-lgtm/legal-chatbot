@@ -115,6 +115,8 @@ audio_file = st.file_uploader(
 st.caption(
     "You can ask questions by typing, uploading a voice recording, or speaking via the microphone if supported by your browser."
 )
+st.caption("🔐 Stored conversations are encrypted for privacy.")
+
 
 document_text = ""
 image_bytes = None

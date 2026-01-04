@@ -62,8 +62,13 @@ def encrypt_text(text):
     return f.encrypt(text.encode()).decode()
 
 def decrypt_text(token):
-    f = Fernet(get_encryption_key())
-    return f.decrypt(token.encode()).decode()
+    try:
+        f = Fernet(get_encryption_key())
+        return f.decrypt(token.encode()).decode()
+    except Exception:
+      
+        return token
+
 
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")

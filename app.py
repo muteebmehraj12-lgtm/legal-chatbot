@@ -86,7 +86,7 @@ oauth2 = OAuth2Component(
 
 result = oauth2.authorize_button(
     name="Continue with Google",
-    redirect_uri="https://share.streamlit.io/",
+    redirect_uri="https://muteebmehraj12-legal-chatbot-main-app.streamlit.app",
     scope="openid email profile",
     key="google_login",
 )
@@ -186,7 +186,7 @@ if user_input:
     })
     save_messages(st.session_state.user_id, st.session_state.messages)
     
-    #st.write("Raw stored message:", st.session_state.messages[-1]["content"])
+  
 
 
     messages = [

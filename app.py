@@ -159,7 +159,6 @@ if document_text and user_input:
     )
 
 if user_input:
- 
     st.session_state.messages.append({
         "role": "user",
         "content": encrypt_text(user_input)
@@ -180,15 +179,13 @@ if user_input:
         }
     ]
 
+    for msg in st.session_state.messages:
+        messages.append({
+            "role": msg["role"],
+            "content": decrypt_text(msg["content"])
+        })
 
-for msg in st.session_state.messages:
-    messages.append({
-        "role": msg["role"],
-        "content": decrypt_text(msg["content"])
-    })
-
-
-with st.chat_message("assistant"):
+    with st.chat_message("assistant"):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=messages
@@ -198,10 +195,8 @@ with st.chat_message("assistant"):
         audio_out = speak_text(client, reply)
         st.audio(audio_out, format="audio/mp3")
 
-
-st.session_state.messages.append({
+    st.session_state.messages.append({
         "role": "assistant",
         "content": encrypt_text(reply)
     })
-
-save_messages(st.session_state.user_id, st.session_state.messages)
+    save_messages(st.session_state.user_id, st.session_state.messages)

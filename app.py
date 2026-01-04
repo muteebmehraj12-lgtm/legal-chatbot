@@ -166,6 +166,9 @@ if user_input:
         "content": encrypt_text(user_input)
     })
     save_messages(st.session_state.user_id, st.session_state.messages)
+    
+    st.write("Raw stored message:", st.session_state.messages[-1]["content"])
+
 
     messages = [
         {

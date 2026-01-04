@@ -9,6 +9,9 @@ import io
 import base64
 import uuid
 import jwt
+import streamlit as st
+from streamlit_oauth import OAuth2Component
+
 
 from cryptography.fernet import Fernet
 
@@ -74,6 +77,27 @@ def decrypt_text(token):
 
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
+oauth2 = OAuth2Component(
+    client_id=st.secrets["GOOGLE_CLIENT_ID"],
+    client_secret=st.secrets["GOOGLE_CLIENT_SECRET"],
+    authorize_endpoint="https://accounts.google.com/o/oauth2/v2/auth",
+    token_endpoint="https://oauth2.googleapis.com/token",
+)
+
+result = oauth2.authorize_button(
+    name="Continue with Google",
+    redirect_uri="https://share.streamlit.io/",
+    scope="openid email profile",
+    key="google_login",
+)
+
+if result:
+    st.session_state.user_email = result["id_token"]["email"]
+    st.success(f"Logged in as {st.session_state.user_email}")
+    
+if "user_email" not in st.session_state:
+    st.stop()
+
 
 st.markdown("## 🔐 Sign in with Google")
 

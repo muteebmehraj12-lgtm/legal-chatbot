@@ -6,6 +6,10 @@ import pdfplumber
 import base64
 import uuid
 import io
+import base64
+import uuid
+from cryptography.fernet import Fernet
+
 
 
 def get_chat_file(user_id):
@@ -47,6 +51,20 @@ def speak_text(client, text):
         input=text
     )
     return audio.read()
+
+def get_encryption_key():
+    if "enc_key" not in st.session_state:
+        st.session_state.enc_key = Fernet.generate_key()
+    return st.session_state.enc_key
+
+def encrypt_text(text):
+    f = Fernet(get_encryption_key())
+    return f.encrypt(text.encode()).decode()
+
+def decrypt_text(token):
+    f = Fernet(get_encryption_key())
+    return f.decrypt(token.encode()).decode()
+
 
 st.set_page_config(page_title="Legal AI Chatbot", page_icon="⚖️")
 def transcribe_audio_bytes(client, audio_bytes):
@@ -107,10 +125,11 @@ if uploaded_file is not None:
         document_text = extract_text_from_pdf(uploaded_file)
     else:
         image_bytes = uploaded_file.getvalue()
-
+        
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+        st.markdown(decrypt_text(msg["content"]))
+
 
 user_input = st.chat_input("Ask a legal question or refer to the uploaded document...")
 audio_bytes = st.audio_input("🎤 Speak (experimental)")
@@ -133,7 +152,11 @@ if document_text and user_input:
     )
 
 if user_input:
-    st.session_state.messages.append({"role": "user", "content": user_input})
+   st.session_state.messages.append({
+    "role": "user",
+    "content": encrypt_text(user_input)
+})
+
     save_messages(st.session_state.user_id, st.session_state.messages)
 
     messages = [
@@ -176,7 +199,11 @@ if user_input:
         audio_out = speak_text(client, reply)
         st.audio(audio_out, format="audio/mp3")
 
-    st.session_state.messages.append({"role": "assistant", "content": reply})
+  st.session_state.messages.append({
+    "role": "assistant",
+    "content": encrypt_text(reply)
+})
+
     save_messages(st.session_state.user_id, st.session_state.messages)
 
 

@@ -139,7 +139,9 @@ for msg in st.session_state.messages:
 
 
 user_input = st.chat_input("Ask a legal question or refer to the uploaded document...")
-audio_bytes = st.audio_input("🎤 Speak (experimental)")
+audio_bytes = st.audio_input("🎤 Speak (experimental – may show warnings)")
+
+
 
 if audio_bytes is not None:
     user_input = transcribe_audio_bytes(client, audio_bytes)

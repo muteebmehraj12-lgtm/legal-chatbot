@@ -199,8 +199,9 @@ with st.chat_message("assistant"):
         st.audio(audio_out, format="audio/mp3")
 
 
-    st.session_state.messages.append({
+st.session_state.messages.append({
         "role": "assistant",
         "content": encrypt_text(reply)
     })
-    save_messages(st.session_state.user_id, st.session_state.messages)
+
+save_messages(st.session_state.user_id, st.session_state.messages)

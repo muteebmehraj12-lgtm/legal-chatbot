@@ -92,12 +92,13 @@ result = oauth2.authorize_button(
 )
 
 if result:
-    st.session_state.user_logged_in = True
-    st.success("Logged in with Google")
+    st.session_state.user_email = result["userinfo"]["email"]
+    st.session_state.user_id = st.session_state.user_email
+    st.success(f"Logged in as {st.session_state.user_email}")
 
-    
 if "user_email" not in st.session_state:
     st.stop()
+
 
 
 def transcribe_audio_bytes(client, audio_bytes):
